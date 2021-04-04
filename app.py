@@ -24,10 +24,10 @@ def create_app(test_config=None):
     @app.route('/actors', methods=['GET'])  # set a get request for actors
     @requires_auth('get:actors')
     def get_actors(payload):
-        actor = Actor.query.all()  # get all actors detail 
+        actors = Actor.query.all()  # get all actors detail 
         return jsonify({
             "success": True,
-            "actors": [actors.format() for actors in actor]
+            "actors": [actor.format() for actor in actors]
         }), 200
 
     @app.route('/actors/<int:actor_id>', methods=['GET'])  # get the actorst by_id
