@@ -23,16 +23,16 @@ def create_app(test_config=None):
 
     @app.route('/actors', methods=['GET'])  # set a get request for actors
     @requires_auth('get:actors')
-    def get_actors(payload):
-        actors = Actor.query.all()  # get all actors detail 
+    def get_actors(jwk):
+        actor = Actor.query.all()  # get all actors detail 
         return jsonify({
             "success": True,
-            "actors": [actor.format() for actor in actors]
+            "actors": [actors.format() for actors in actor]
         }), 200
 
     @app.route('/actors/<int:actor_id>', methods=['GET'])  # get the actorst by_id
     @requires_auth('get:actors')
-    def get_actor(payload ,actor_id):
+    def get_actor(jwk ,actor_id):
         actor = Actor.query.get(actor_id)  # I get the code here by id 
         if actor is None:  # if there is no actor I will abort 404 or (not found)
             abort(404)
@@ -43,7 +43,7 @@ def create_app(test_config=None):
 
     @app.route('/actors', methods=['POST']) # post an actor
     @requires_auth('post:actors')
-    def post_actors(payload):
+    def post_actors(jwk):
         body = request.get_json()
         name = body.get('name') # I get the name
         age = body.get('age') # I get the age 
@@ -67,7 +67,7 @@ def create_app(test_config=None):
 
     @app.route('/actors/<int:actor_id>', methods=['PATCH']) # patch the data or (update it)
     @requires_auth('patch:actors')
-    def edit_actors(payload, actor_id):
+    def edit_actors(jwk, actor_id):
         body = request.get_json() 
         
         actor = Actor.query.get(actor_id)
@@ -102,7 +102,7 @@ def create_app(test_config=None):
 
     @app.route('/actors/<int:actor_id>', methods=['DELETE'])
     @requires_auth('delete:actors')
-    def delete_actors(payload, actor_id):
+    def delete_actors(jwk, actor_id):
         actor = Actor.query.get(actor_id) # get the actor by id 
         if actor is None:
             abort(404)
@@ -125,7 +125,7 @@ def create_app(test_config=None):
 
     @app.route('/movies', methods=['GET']) # get the movie 
     @requires_auth('get:movies')
-    def get_movies(payload):
+    def get_movies(jwk):
         movies = Movie.query.all()
 
         return jsonify({
@@ -135,7 +135,7 @@ def create_app(test_config=None):
 
     @app.route('/movies/<int:movie_id>', methods=['GET'])
     @requires_auth('get:movies')
-    def get_movie(payload, movie_id):
+    def get_movie(jwk, movie_id):
         movie = Movie.query.get(movie_id) # get the movie by id 
         if movie is None:
             abort(404) # if the movie does not exist I want to raise 404 error 
@@ -146,7 +146,7 @@ def create_app(test_config=None):
 
     @app.route('/movies', methods=['POST']) # create movie 
     @requires_auth('post:movies')
-    def post_movies(payload):
+    def post_movies(jwk):
         # Fetch request body
         body = request.get_json()
 
@@ -170,7 +170,7 @@ def create_app(test_config=None):
 
     @app.route('/movies/<int:id>', methods=['PATCH'])
     @requires_auth('patch:moviess')
-    def edit_movies(payload, id):
+    def edit_movies(jwk, id):
 
         movie = Movie.query.get(id)
 
@@ -203,7 +203,7 @@ def create_app(test_config=None):
 
     @app.route('/movies/<int:movie_id>', methods=['DELETE', "GET"])
     @requires_auth('delete:movie')
-    def delete_movie(payload, movie_id):
+    def delete_movie(jwk, movie_id):
         try:
             movie = Movie.query.filter(
                 Movie.id == movie_id).one_or_none()
